@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Upload, X, Link } from 'lucide-react'
 import Image from 'next/image'
@@ -15,6 +15,32 @@ export default function ImageUpload({ onImageSelect, selectedImage, placeholder 
   const [preview, setPreview] = useState<string | null>(null)
   const [urlInput, setUrlInput] = useState('')
   const [showUrlInput, setShowUrlInput] = useState(false)
+
+  // Handle image paste functionality
+  useEffect(() => {
+    const handlePaste = async (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items
+      if (!items) return
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i]
+        if (item.type.indexOf('image') !== -1) {
+          const file = item.getAsFile()
+          if (file) {
+            onImageSelect(file)
+            const reader = new FileReader()
+            reader.onload = () => setPreview(reader.result as string)
+            reader.readAsDataURL(file)
+            e.preventDefault()
+            return
+          }
+        }
+      }
+    }
+
+    document.addEventListener('paste', handlePaste)
+    return () => document.removeEventListener('paste', handlePaste)
+  }, [onImageSelect])
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
@@ -102,7 +128,7 @@ export default function ImageUpload({ onImageSelect, selectedImage, placeholder 
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
                 placeholder="https://example.com/image.jpg"
-                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-all duration-200"
+                className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 transition-all duration-200 text-gray-900 bg-white placeholder-gray-500"
                 onKeyPress={(e) => e.key === 'Enter' && handleUrlSubmit()}
               />
               <button
@@ -130,7 +156,7 @@ export default function ImageUpload({ onImageSelect, selectedImage, placeholder 
               src={preview}
               alt="Selected image"
               fill
-              className="object-cover"
+              className="object-contain"
             />
           </div>
           <button

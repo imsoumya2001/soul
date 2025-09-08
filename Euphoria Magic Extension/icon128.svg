@@ -1,0 +1,29 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#A855F7;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#D946EF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="128" height="128" rx="20" fill="url(#gradient)"/>
+  <g filter="url(#glow)">
+    <path d="M64 24L68 52L96 56L68 60L64 88L60 60L32 56L60 52L64 24Z" fill="white" stroke="white" stroke-width="1"/>
+  </g>
+  <circle cx="64" cy="40" r="4" fill="white" opacity="0.9"/>
+  <circle cx="48" cy="64" r="3" fill="white" opacity="0.7"/>
+  <circle cx="80" cy="64" r="3" fill="white" opacity="0.7"/>
+  <circle cx="64" cy="80" r="4" fill="white" opacity="0.9"/>
+  <circle cx="56" cy="48" r="2" fill="white" opacity="0.5"/>
+  <circle cx="72" cy="48" r="2" fill="white" opacity="0.5"/>
+  <circle cx="56" cy="72" r="2" fill="white" opacity="0.5"/>
+  <circle cx="72" cy="72" r="2" fill="white" opacity="0.5"/>
+</svg>

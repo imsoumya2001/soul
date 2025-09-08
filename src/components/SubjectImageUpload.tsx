@@ -111,7 +111,7 @@ export default function SubjectImageUpload({ onImageSelect, selectedImage }: Sub
               src={preview}
               alt="Selected subject"
               fill
-              className="object-cover"
+              className="object-contain"
             />
           </div>
           <button
@@ -141,7 +141,7 @@ export default function SubjectImageUpload({ onImageSelect, selectedImage }: Sub
                   src={face.thumbnail}
                   alt="Recent face"
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform"
+                  className="object-contain group-hover:scale-105 transition-transform"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
                   <User className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />

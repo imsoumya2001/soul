@@ -1,139 +1,94 @@
+You are given a task to integrate an existing React component in the codebase
+
+The codebase should support:
+- shadcn project structure  
+- Tailwind CSS
+- Typescript
+
+If it doesn't, provide instructions on how to setup project via shadcn CLI, install Tailwind or Typescript.
+
+Determine the default path for components and styles. 
+If default path for components is not /components/ui, provide instructions on why it's important to create this folder
+Copy-paste this component to /components/ui folder:
+```tsx
+gradient-button.tsx
+"use client"
+
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
+
+const gradientButtonVariants = cva(
+  [
+    "gradient-button",
+    "inline-flex items-center justify-center",
+    "rounded-[11px] min-w-[132px] px-9 py-4",
+    "text-base leading-[19px] font-[500] text-white",
+    "font-sans font-bold",
+    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+    "disabled:pointer-events-none disabled:opacity-50",
+  ],
+  {
+    variants: {
+      variant: {
+        default: "",
+        variant: "gradient-button-variant",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+export interface GradientButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof gradientButtonVariants> {
+  asChild?: boolean
+}
+
+const GradientButton = React.forwardRef<HTMLButtonElement, GradientButtonProps>(
+  ({ className, variant, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(gradientButtonVariants({ variant, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+GradientButton.displayName = "GradientButton"
+
+export { GradientButton, gradientButtonVariants }
+
+demo.tsx
+import { GradientButton } from "@/components/ui/gradient-button"
+
+function Demo() {
+  return (
+    <div className="flex gap-8">
+      <GradientButton>Get Started</GradientButton>
+      <GradientButton variant="variant">Get Started</GradientButton>
+    </div>
+  )
+}
+
+export { Demo }
+```
+
+Install NPM dependencies:
+```bash
+@radix-ui/react-slot, class-variance-authority
+```
+
+Extend existing globals.css with this code:
+```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --color-1: 0 100% 63%;
-  --color-2: 270 100% 63%;
-  --color-3: 210 100% 63%;
-  --color-4: 195 100% 63%;
-  --color-5: 90 100% 63%;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-/* Rainbow button animation */
-@keyframes rainbow {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.animate-rainbow {
-  animation: rainbow 3s ease infinite;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-/* AI Loader Animations */
-@keyframes loader-rotate {
-  0% {
-    transform: rotate(90deg);
-    box-shadow: 0 10px 20px 0 #fff inset,
-      0 20px 30px 0 #ad5fff inset,
-      0 60px 60px 0 #471eec inset;
-  }
-  50% {
-    transform: rotate(270deg);
-    box-shadow: 0 10px 20px 0 #fff inset,
-      0 20px 10px 0 #d60a47 inset,
-      0 40px 60px 0 #311e80 inset;
-  }
-  100% {
-    transform: rotate(450deg);
-    box-shadow: 0 10px 20px 0 #fff inset,
-      0 20px 30px 0 #ad5fff inset,
-      0 60px 60px 0 #471eec inset;
-  }
-}
-
-@keyframes loader-letter-anim {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: translateY(0);
-  }
-  20% {
-    opacity: 1;
-    transform: scale(1.15);
-  }
-  40% {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
-}
-
-.loader-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-  position: relative;
-}
-
-.loader-letter {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #6366f1;
-  animation: loader-letter-anim 2s ease-in-out infinite;
-}
-
-.loader {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin-left: 0.5rem;
-  animation: loader-rotate 2s linear infinite;
-  background: conic-gradient(from 0deg, #ad5fff, #d60a47, #471eec, #ad5fff);
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-/* Drag and drop styles */
-.drag-active {
-  @apply border-blue-500 bg-blue-50;
-}
-
-.drag-reject {
-  @apply border-red-500 bg-red-50;
-}
 
 @layer base {
   @property --pos-x {
@@ -336,3 +291,21 @@ body {
     --border-color-2: hsla(320, 50%, 90%, 0.75);
   }
 }
+```
+
+Implementation Guidelines
+ 1. Analyze the component structure and identify all required dependencies
+ 2. Review the component's argumens and state
+ 3. Identify any required context providers or hooks and install them
+ 4. Questions to Ask
+ - What data/props will be passed to this component?
+ - Are there any specific state management requirements?
+ - Are there any required assets (images, icons, etc.)?
+ - What is the expected responsive behavior?
+ - What is the best place to use this component in the app?
+
+Steps to integrate
+ 0. Copy paste all the code above in the correct directories
+ 1. Install external dependencies
+ 2. Fill image assets with Unsplash stock images you know exist
+ 3. Use lucide-react icons for svgs or logos if component requires them

@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       
       const result = await model.generateContent([
         {
-          text: variedPrompt
+          text: "REFERENCE IMAGE (the scene/environment to copy):"
         },
         {
           inlineData: {
@@ -74,10 +74,16 @@ export async function POST(request: NextRequest) {
           }
         },
         {
+          text: "SUBJECT IMAGE (the person to place in the scene):"
+        },
+        {
           inlineData: {
             mimeType: subjectImage.type,
             data: subjectBase64
           }
+        },
+        {
+          text: variedPrompt
         }
       ])
 
@@ -109,37 +115,23 @@ export async function POST(request: NextRequest) {
       return `data:image/png;base64,${imageData}`
     }
 
-    // Check if this is a regeneration request
-    const isRegeneration = params.isRegeneration || false
-    
-    if (isRegeneration) {
-      // Create variations for different results
-      const variations = [
-        'Keep the pose natural and relaxed with a slight smile.',
-        'Use a more confident pose with a different facial expression or head tilt.'
-      ]
+    // Always generate two images with different variations
+    const variations = [
+      'Keep the pose natural and relaxed with a slight smile.',
+      'Use a more confident pose with a different facial expression or head tilt.'
+    ]
 
-      // Generate both images concurrently with different variations
-      const [imageUrl1, imageUrl2] = await Promise.all([
-        generateImage(variations[0]),
-        generateImage(variations[1])
-      ])
+    // Generate both images concurrently with different variations
+    const [imageUrl1, imageUrl2] = await Promise.all([
+      generateImage(variations[0]),
+      generateImage(variations[1])
+    ])
 
-      return NextResponse.json({
-        success: true,
-        images: [imageUrl1, imageUrl2],
-        prompt: prompt
-      })
-    } else {
-      // Generate single image for initial generation
-      const imageUrl = await generateImage('Keep the pose natural and relaxed with a slight smile.')
-      
-      return NextResponse.json({
-        success: true,
-        images: [imageUrl],
-        prompt: prompt
-      })
-    }
+    return NextResponse.json({
+      success: true,
+      images: [imageUrl1, imageUrl2],
+      prompt: prompt
+    })
 
   } catch (error) {
     console.error('Error generating image:', error)

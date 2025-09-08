@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soul AI Scene Transformer</title>
+  <link rel="stylesheet" href="generation.css">
+  <script src="confetti.js"></script>
+  <script src="banana-confetti.js"></script>
+</head>
+<body>
+  <div class="generation-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
+        </svg>
+        <h1>Soul AI Scene Transformer</h1>
+      </div>
+      <div class="header-actions">
+        <button id="newGenerationBtn" class="header-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          New Transformation
+        </button>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <!-- Left Panel - Input & Controls -->
+      <div class="left-panel">
+        <!-- Reference Scene -->
+        <div class="section">
+          <h3>Reference Scene</h3>
+          <div class="image-container">
+            <div id="referenceImagePreview" class="image-preview">
+              <div class="placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="currentColor"/>
+                </svg>
+                <p>Loading reference scene...</p>
+              </div>
+            </div>
+            <button id="changeSceneBtn" class="change-image-btn">Change Scene</button>
+          </div>
+        </div>
+
+        <!-- Your Photo -->
+        <div class="section">
+          <h3>Your Photo</h3>
+          <div class="image-container">
+            <div id="characterImagePreview" class="image-preview">
+              <div class="placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 12C14.21 0 16 10.79 16 12C16 14.21 14.21 16 12 16C9.79 16 8 14.21 8 12C8 10.79 9.79 9 12 9ZM12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L19 5V6.5L17.5 5H16.5L15 6.5V5L13 7V9H21Z" fill="currentColor"/>
+                </svg>
+                <p>Upload your photo</p>
+              </div>
+            </div>
+            <button id="uploadPhotoBtn" class="change-image-btn">Upload Photo</button>
+            <input type="file" id="characterImageInput" accept="image/*" style="display: none;">
+          </div>
+        </div>
+
+        <!-- Transformation Options -->
+        <div class="section">
+          <h3>Transformation Options</h3>
+          <div class="settings-grid">
+            <div class="setting-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="preserveClothing" checked>
+                <span class="checkmark"></span>
+                Preserve clothing style
+              </label>
+            </div>
+            <div class="setting-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="preserveAccessories" checked>
+                <span class="checkmark"></span>
+                Preserve accessories
+              </label>
+            </div>
+            <div class="setting-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="preserveExpression" checked>
+                <span class="checkmark"></span>
+                Preserve facial expression
+              </label>
+            </div>
+            <div class="setting-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="copyPose">
+                <span class="checkmark"></span>
+                Copy pose from scene
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced Parameters -->
+        <div class="section">
+          <h3>Advanced Parameters</h3>
+          <div class="advanced-params">
+            <div class="param-group">
+              <label>Strength</label>
+              <input type="range" id="strengthSlider" min="0.1" max="1.0" step="0.1" value="0.8">
+              <span id="strengthValue">0.8</span>
+            </div>
+            <div class="param-group">
+              <label>Guidance Scale</label>
+              <input type="range" id="guidanceSlider" min="1" max="20" step="1" value="7">
+              <span id="guidanceValue">7</span>
+            </div>
+            <div class="param-group">
+              <label>Steps</label>
+              <input type="range" id="stepsSlider" min="10" max="50" step="5" value="20">
+              <span id="stepsValue">20</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <div class="generate-section">
+          <button id="generateBtn" class="generate-btn" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
+            </svg>
+            Transform Scene
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Panel - Results -->
+      <div class="right-panel">
+        <!-- Transformed Image -->
+        <div class="section">
+          <div class="section-header">
+            <h3>Transformed Scene</h3>
+            <div class="result-actions">
+              <button id="regenerateBtn" class="action-btn" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 4V9H4.58L6.15 6.64C7.75 4.48 10.24 3.5 12.5 4.5C16.5 6.5 18 11.5 16 15.5C14.5 18.5 11 19.5 8 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Regenerate
+              </button>
+              <button id="downloadBtn" class="action-btn" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 15V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V15M7 10L12 15L17 10M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Download
+              </button>
+            </div>
+          </div>
+          
+          <div class="result-container">
+            <div id="transformedImagePreview" class="generated-preview">
+              <div class="placeholder">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="currentColor"/>
+                </svg>
+                <p>Click "Transform Scene" to create your transformation</p>
+              </div>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state hidden">
+              <div class="spinner"></div>
+              <p id="loadingText">Transforming your scene...</p>
+              <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat to Edit -->
+        <div class="section">
+          <h3>Chat to Edit</h3>
+          <div class="chat-container">
+            <div id="chatMessages" class="chat-messages">
+              <div class="chat-message system">
+                <div class="message-content">
+                  <p>👋 Hi! I can help you refine your scene transformation. Try saying things like:</p>
+                  <ul>
+                    <li>"Make the lighting warmer"</li>
+                    <li>"Adjust my pose slightly"</li>
+                    <li>"Change the background color"</li>
+                    <li>"Make me blend better with the scene"</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div class="chat-input-container">
+              <input type="text" id="chatInput" placeholder="Describe how you'd like to modify the transformation..." disabled>
+              <button id="sendChatBtn" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="generation.js"></script>
+</body>
+</html>

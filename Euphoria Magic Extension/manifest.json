@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Euphoria",
+  "version": "1.0.0",
+  "description": "Transform yourself into any scene with AI - replace people in images from Pinterest, Instagram and more",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Euphoria",
+    "default_icon": {
+      "16": "icon16.svg",
+      "48": "icon48.svg",
+      "128": "icon128.svg"
+    }
+  },
+  "icons": {
+    "16": "icon16.svg",
+    "48": "icon48.svg",
+    "128": "icon128.svg"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["generation.html", "generation.css", "generation.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

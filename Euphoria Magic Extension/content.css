@@ -1,0 +1,68 @@
+/* Soul AI Icon Styles - Pinterest Red Theme */
+.soul-ai-icon {
+  position: fixed;
+  z-index: 999999;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #e60023, #bd081c);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(230, 0, 35, 0.4);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  opacity: 0.9;
+  pointer-events: auto;
+}
+
+.soul-ai-icon:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 15px rgba(230, 0, 35, 0.6);
+  background: linear-gradient(135deg, #cc0000, #990000);
+  opacity: 1;
+}
+
+.soul-ai-icon:active {
+  transform: scale(1.05);
+}
+
+.soul-ai-icon svg {
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.soul-ai-icon:hover svg {
+  transform: rotate(180deg);
+}
+
+/* Animation for button appearance */
+@keyframes soulAISlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.soul-ai-recreate-btn {
+  animation: soulAISlideIn 0.2s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .soul-ai-recreate-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .soul-ai-recreate-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
