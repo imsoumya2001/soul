@@ -26,6 +26,33 @@ const COLORS = {
 
 const DownloadExtensionButton = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    try {
+      setIsDownloading(true);
+      const response = await fetch('/api/download-extension');
+      
+      if (!response.ok) {
+        throw new Error('Download failed');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'euphoria-extension.zip';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Download error:', error);
+      alert('Download failed. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
   
   return (
     <div className="flex justify-center">
@@ -52,15 +79,17 @@ const DownloadExtensionButton = () => {
           <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[40%] w-[70.8%] h-[42.85%] rounded-lg filter blur-[15px] bg-[#600006]"></span>
         </div>
         <button
-          className="absolute inset-0 rounded-lg bg-transparent cursor-pointer flex items-center justify-center"
+          className="absolute inset-0 rounded-lg bg-transparent cursor-pointer flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Download Extension"
           type="button"
+          onClick={handleDownload}
+          disabled={isDownloading}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           <span className="flex items-center justify-center px-3 sm:px-4 py-2 gap-2 rounded-lg group-hover:text-yellow-400 text-white text-xs sm:text-sm font-semibold tracking-wide max-w-full">
             <Download className="group-hover:fill-yellow-400 fill-white w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-            <span className="truncate">DOWNLOAD EXTENSION</span>
+            <span className="truncate">{isDownloading ? 'DOWNLOADING...' : 'DOWNLOAD EXTENSION'}</span>
           </span>
         </button>
       </div>
